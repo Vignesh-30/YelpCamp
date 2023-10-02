@@ -11,6 +11,7 @@ const ExpressError = require("./utilities/ExpressError");
 const catchAsync = require("./utilities/CatchAsync");
 const app = express();
 const ejsmate = require('ejs-mate');
+const review = require('./models/review');
 
 
 app.engine('ejs', ejsmate);
@@ -100,9 +101,18 @@ app.delete('/campgrounds/:id', catchAsync(async (req, res, next) => {
     const campground = await Campground.findByIdAndDelete(id);
     res.redirect("/campgrounds");
 }));
+
+app.delete('/campgrounds/:id/reviews/:reviewId', catchAsync(async (req, res, next) => {
+    const {id, reviewId} = req.params;
+    await Review.findByIdAndDelete(reviewId);
+    await Campground.findByIdAndUpdate(id, {$pull: {review : reviewId}});
+    res.redirect(`/campgrounds/${id}`);
+}));
+
 app.all("*", (req, res, next) => {
     next(new ExpressError("Page not found", 404))
 });
+
 app.use((err, req, res, next) => {
     const { statusCode = 500 } = err;
     if (!err.message) err.message = 'Oh No, Something Went Wrong!'
