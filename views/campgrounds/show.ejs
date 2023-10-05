@@ -9,52 +9,61 @@
                 </div>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item"> <%= campground.location %></li>
+                    <li class="list-group-item"> published by <%= campground.author.username %></li>
                     <li class="list-group-item"> $<%= campground.price %> / night</li>
                 </ul>   
+                <% if (campground.author.equals(currentUser)) { %>
                 <div class="card-body">
                     <a href="/campgrounds/<%= campground._id %>/edit" class="card-link btn btn-info ">Edit Campground</a>
                     <form class="d-inline" action="/campgrounds/<%= campground._id %>?_method=DELETE" method="POST">
                         <button class="btn btn-danger">Delete</button>
                     </form>
                 </div>
+                <% } %>
                 <div class="card-footer text-muted">
                     2 days ago
                 </div>
             </div>
         </div>
         <div class="col-6">
+            <% if (currentUser) { %>
             <h2>Leave a Review</h2>
-                <form action="/campgrounds/<%= campground._id %>/reviews" method="POST" class="mb-3 needs-Validation" novalidate>
-                    <div class="mb-3">
-                        <label for="rating" class="form-label">Rating</label>
-                        <input class="form-control" type="range" name="review[rating]" min="1" max="5" id="rating" required>
-                        <div class="valid-feedback">
-                            Looks good!
-                        </div>
+            <form action="/campgrounds/<%= campground._id %>/reviews" method="POST" class="mb-3 needs-Validation" novalidate>
+                <div class="mb-3">
+                    <label for="rating" class="form-label">Rating</label>
+                    <input class="form-control" type="range" name="review[rating]" min="1" max="5" id="rating" required>
+                    <div class="valid-feedback">
+                        Looks good!
                     </div>
-                    <div class="mb-3">
-                        <label for="body" class="form-label">Review</label>
-                        <textarea class="form-control" name="review[body]" id="body" col="10", rows="3" required></textarea>
-                        <div class="valid-feedback">
-                            Looks good!
-                        </div>
+                </div>
+                <div class="mb-3">
+                    <label for="body" class="form-label">Review</label>
+                    <textarea class="form-control" name="review[body]" id="body" col="10", rows="3" required></textarea>
+                    <div class="valid-feedback">
+                        Looks good!
                     </div>
-                    <button class="btn btn-primary">Submit</button>
-                </form>
+                </div>
+                <button class="btn btn-primary">Submit</button>
+            </form>
+            <% } %> 
                 <% for (let review of campground.reviews) { %>
 
                     <div class="card mb-3">
                         <div class="card-body">
                             <h5 class="card-title">Rating: <%= review.rating %></h5>
-                            <p class="card-text text-body-secondary">Review: <%= review.body %></p>
-                        
+                            <h6 class="card-subtitle text-secondary mb-2"> reviewed by <%= review.author.username %> </h6>
+                            <p class="card-text">Review: <%= review.body %></p>
+                            
+                            <% if (currentUser && currentUser.equals(review.author._id)) { %>
                             <form action="/campgrounds/<%= campground._id %>/reviews/<%= review._id %>?_method=DELETE" method="POST">
                                 <button class="btn btn-sm btn-danger">Delete</button>
                             </form>
+                            <% } %>
                         </div>
                     </div>  
                 <% } %>
-        </div>             
+        </div>   
+                 
     </div>
 
     
