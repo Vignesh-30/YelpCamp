@@ -56,7 +56,7 @@ mongoose.connect('mongodb://127.0.0.1:27017/yelp-camp')
     });
 
 app.use((req,res,next) => {
-    res.locals.localUser = req.user;
+    res.locals.currentUser = req.user;
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');
     next();
