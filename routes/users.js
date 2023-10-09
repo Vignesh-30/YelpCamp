@@ -5,17 +5,14 @@ const user = require('../controllers/users');
 const catchAsync = require('../utilities/CatchAsync');
 const { storeReturnTo } = require('../middleware');
 
-router.get('/register', user.registerPage)
+router.route('/register')
+    .get(user.registerPage)
+    .post(catchAsync(user.registerUser))
 
-router.get('/login', user.loginPage)
-
+router.route('/login')
+    .get(user.loginPage)
+    .post(storeReturnTo, passport.authenticate('local', { failureFlash: true, failureRedirect: '/login' }), user.loginUser)
 
 router.get('/logout', user.logoutUser);
-
-router.post('/register', catchAsync(user.registerUser));
-
-router.post('/login', storeReturnTo, passport.authenticate('local', { failureFlash: true, failureRedirect: '/login' }), user.loginUser)
-
-
 
 module.exports = router;
