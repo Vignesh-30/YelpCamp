@@ -1,3 +1,7 @@
+if (process.env.NODE_ENV !== "production") {
+    require('dotenv').config();
+}
+console.log(process.env.secret);
 const express = require('express');
 const port = 3000;
 const path = require('path');
