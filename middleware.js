@@ -56,3 +56,10 @@ module.exports.validateReview = (req, res, next) => {
         next();
     }
 }   
+
+module.exports.ignoreFavicon = (req, res, next) => {
+    if (req.originalUrl.includes('favicon.ico')) {
+      return res.status(204).end()
+    }
+    next();
+  }
