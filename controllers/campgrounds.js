@@ -25,7 +25,6 @@ module.exports.postNewCampground = async (req, res, next) => {
     }).send()
     newCamp.geometry = match.body.features[0].geometry;
     await newCamp.save();
-    console.log(newCamp);
     req.flash('success', 'Campground added successfully!');
     res.redirect(`/campgrounds/${newCamp._id}`);
 };
@@ -37,7 +36,6 @@ module.exports.showCampground = async (req, res, next) => {
             path: "author"
         }
     });
-    console.log(campground);
     if (!campground) {
         req.flash('error', 'Campground cannot be found!');
         return res.redirect("/campgrounds");
@@ -68,7 +66,6 @@ module.exports.postEditForm = async (req, res, next) => {
         }
         await camp.updateOne({ $pull: { image: { filename: { $in: req.body.deleteimages } } } });
     }
-    console.log
     req.flash('success', 'Campground updated successfully!');
     res.redirect(`/campgrounds/${id}`);
 };
