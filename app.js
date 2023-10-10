@@ -1,7 +1,6 @@
 if (process.env.NODE_ENV !== "production") {
     require('dotenv').config();
 }
-console.log(process.env.secret);
 const express = require('express');
 const port = 3000;
 const path = require('path');
@@ -15,7 +14,7 @@ const flash = require("connect-flash");
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const User = require('./models/user');
-
+const {ignoreFavicon} = require('./middleware')
 const campgroundRoutes = require('./routes/campgrounds');
 const reviewRoutes = require('./routes/reviews');
 const userRoutes = require('./routes/users');
@@ -73,7 +72,7 @@ app.use("/campgrounds/:id/reviews", reviewRoutes);
 app.get("/", (req, res) => {
     res.render("home");
 });
-
+app.use(ignoreFavicon);
 app.all("*", (req, res, next) => {
     next(new ExpressError("Page not found", 404))
 });
@@ -83,6 +82,7 @@ app.use((err, req, res, next) => {
     if (!err.message) err.message = 'Oh No, Something Went Wrong!'
     res.status(statusCode).render('error', { err })
 })
+
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
