@@ -18,10 +18,13 @@ const {ignoreFavicon} = require('./middleware')
 const campgroundRoutes = require('./routes/campgrounds');
 const reviewRoutes = require('./routes/reviews');
 const userRoutes = require('./routes/users');
+const mongoSanitize = require('express-mongo-sanitize');
+const helmet = require('helmet');   
 
 const sessionConfig = {
     secret: "thisisasecretcode",
     resave: false,
+    // secure: true,
     saveUninitialized: true,
     cookie: {
         httpOnly: true,
@@ -39,8 +42,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 
 app.use(express.static(path.join(__dirname, 'public')))
+app.use(mongoSanitize());
 app.use(session(sessionConfig));
 app.use(flash());
+app.use(helmet({contentSecurityPolicy: false}));
 
 app.use(passport.initialize());
 app.use(passport.session());

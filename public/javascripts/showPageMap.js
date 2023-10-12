@@ -15,3 +15,7 @@ new mapboxgl.Marker({
     )
     .addTo(map);
 
+
+
+map.addControl( new mapboxgl.NavigationControl(), 'top-right');
+
