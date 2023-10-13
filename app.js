@@ -10,6 +10,7 @@ const ExpressError = require("./utilities/ExpressError");
 const app = express();
 const ejsmate = require('ejs-mate');
 const session = require("express-session");
+const MongoStore = require('connect-mongo');
 const flash = require("connect-flash");
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
@@ -20,9 +21,25 @@ const reviewRoutes = require('./routes/reviews');
 const userRoutes = require('./routes/users');
 const mongoSanitize = require('express-mongo-sanitize');
 const helmet = require('helmet');   
+const dbUrl = 'mongodb://127.0.0.1:27017/yelp-camp';//process.env.DB_URL;
+
+
+const store = MongoStore.create({
+    mongoUrl: dbUrl,
+    touchAfter: 24 * 60 * 60,
+    crypto: {
+        secret: 'thisshouldbeabettersecret!'
+    }
+});
+
+store.on('error', function(e) {
+    console.log('MongoStore error: ', e);
+})
 
 const sessionConfig = {
-    secret: "thisisasecretcode",
+    store,
+    name: 'session',
+    secret: "thisshouldbeabettersecret!",
     resave: false,
     // secure: true,
     saveUninitialized: true,
@@ -32,6 +49,15 @@ const sessionConfig = {
         maxAge: 1000 * 60 * 60 *24 * 7
     }
 }
+
+mongoose.connect(dbUrl)
+    .then(() => {
+        console.log("Mongo connection open!");
+    })
+    .catch(error => {
+        console.log("Mongo connection error!");
+        console.log(error);
+    });
 
 
 app.engine('ejs', ejsmate);
@@ -54,14 +80,9 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 mongoose.set('strictQuery', true);
-mongoose.connect('mongodb://127.0.0.1:27017/yelp-camp')
-    .then(() => {
-        console.log("Mongo connection open!");
-    })
-    .catch(error => {
-        console.log("Mongo connection error!");
-        console.log(error);
-    });
+
+
+
 
 app.use((req,res,next) => {
     res.locals.currentUser = req.user;
