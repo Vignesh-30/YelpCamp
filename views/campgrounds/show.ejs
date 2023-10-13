@@ -49,11 +49,14 @@
                 </div>
             </div>
         </div>
-        <div id='map'></div>
+        
 
-        <div class="col-6">
+        <div class="col-6 ">
+            <div id='map' class="mb-3 "></div>
             <% if (currentUser) { %>
-            <h2>Leave a Review</h2>
+                <div class="card review-card mb-3">
+            <h2 class="text-white card-title ms-2 mt-1">Leave a Review</h2>
+            <div class="card-body">
             <form action="/campgrounds/<%= campground._id %>/reviews" method="POST" class="mb-3 needs-Validation" novalidate>
                 <div>
                     <fieldset class="starability-grow">
@@ -71,18 +74,20 @@
                       </fieldset>
                 </div>
                 <div class=" mb-3">
-                    <label for="body" class="form-label">Review</label>
-                    <textarea class="form-control" name="review[body]" id="body" col="10", rows="3" required></textarea>
+                    <label for="body" class="form-label text-white">Review</label>
+                    <textarea class="form-control review border-0 " name="review[body]" id="body" cols="10" rows="3" required></textarea>
                     <div class="valid-feedback">
                         Looks good!
                     </div>
                 </div>
                 <button class="btn btn-primary">Submit</button>
             </form>
+            </div>
+                </div>
             <% } %> 
                 <% for (let review of campground.reviews) { %>
 
-                    <div class="card mb-3">
+                    <div class="card mb-3 reviews text-white ">
                         <div class="card-body">
                             <h5 class="card-title"><%= review.author.username %></h5>
                             <p class="starability-result" data-rating="<%=review.rating%>">

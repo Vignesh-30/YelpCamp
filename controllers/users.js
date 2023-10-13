@@ -14,7 +14,7 @@ module.exports.logoutUser = (req, res, next) => {
             return next(err);
         }
         req.flash('success', 'Goodbye!');
-        res.redirect('/campgrounds');
+        res.redirect('/');
     });
 };
 
@@ -26,7 +26,7 @@ module.exports.registerUser = async (req, res, next) => {
         req.login(registeredUser, function(err) {
             if (err) { throw err; }
             req.flash('success', "Welcome to YelpCamp!");
-            res.redirect('/campgrounds');
+            res.redirect('/');
           });
         
     } catch (e) {

@@ -1,10 +1,11 @@
 <% layout('/layouts/boilerplate') %>
 
-    <div id='cluster-map'></div>
-    <h1>Campgrounds</h1>
+    <div id='cluster-map' class="mb-3"></div>
+    <h1 class="text-center text-white mb-2">Campgrounds</h1>
 
+    <div>
     <% for (let camp of campgrounds) { %>
-        <div class="card mb-3">
+        <div class="card mb-3 border border-danger-subtle ">
             <div class="row">
                 <div class="col-md-4">
                     <% if (camp.image.length) {%>
